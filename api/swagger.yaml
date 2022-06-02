@@ -1,0 +1,186 @@
+openapi: 3.0.2
+info:
+  title: Monitoring Nilai Siswa
+  description: API for Monitoring Nilai Siswa
+  contact:
+    name: Ari Bayu Prasetyo
+    email: aribprasetyo88@gmail.com
+  license:
+    name: APACHE 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: "1"
+externalDocs:
+  description: Github Ari bayu Prasetyo
+  url: https://github.com/ariemax88-abc
+servers:
+- url: "https://{environment}.aribayuprasetyo.com/api/v1"
+  description: Monitoring Nilai Siswa Server
+  variables:
+    environment:
+      description: Server Environment
+      enum:
+      - admin
+      - guru
+      - murid
+      default: admin
+paths:
+  /monitoring:
+    get:
+      tags:
+      - Monitoring Nilai
+      summary: Get Value from Teacher
+      description: Siswa dapat melihat nilai yang di inputkan guru
+      parameters:
+      - name: Melihat_nilai
+        in: query
+        description: Siswa berhasil melihat nilai
+        required: false
+        style: form
+        explode: true
+        schema:
+          maxLength: 100
+          minLength: 1
+          type: string
+          nullable: false
+      responses:
+        "200":
+          description: Siswa success lihat data nilai
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200'
+                x-content-type: application/json
+    post:
+      tags:
+      - Monitoring Nilai
+      summary: Create new data
+      description: Admin input data guru dan siswa | Guru input nilai siswa
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/monitoring_body'
+        required: true
+      responses:
+        "200":
+          description: Guru dan Admin berhasil input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+  /monitoring/{monitoringId}:
+    put:
+      tags:
+      - Monitoring Nilai
+      summary: Update existing data
+      description: Admin update data guru dan siswa | Guru update nilai siswa
+      parameters:
+      - name: monitoringId
+        in: path
+        description: monitoring Id for update
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 100
+          minLength: 1
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/monitoring_monitoringId_body'
+        required: true
+    delete:
+      tags:
+      - Monitoring Nilai
+      summary: Delete existing data
+      description: Admin bisa delete data guru dan siswa | Guru bisa delete nilai
+        siswa
+      parameters:
+      - name: monitoringId
+        in: path
+        description: monitoring Id for deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 100
+          minLength: 1
+          type: string
+      responses:
+        "200":
+          description: Success delete todolist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+              examples:
+                success:
+                  description: Success delete todolist
+                  value:
+                    success: true
+        "404":
+          description: Failed delete not found todolist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+              examples:
+                failed:
+                  description: Failed delete todolist
+                  value:
+                    success: false
+components:
+  schemas:
+    inline_response_200:
+      type: object
+      properties:
+        id_siswa:
+          type: string
+        nama_siswa:
+          type: string
+        nilai:
+          type: number
+          format: int32
+      example:
+        nama_siswa: nama_siswa
+        nilai: 0.80082819046101150206595775671303272247314453125
+        id_siswa: id_siswa
+    monitoring_body:
+      type: object
+      properties:
+        guru:
+          minLength: 1
+          type: string
+        siswa:
+          minLength: 1
+          type: string
+    inline_response_200_1:
+      type: object
+      properties:
+        id_admin:
+          type: string
+        id_guru:
+          type: string
+      example:
+        id_admin: id_admin
+        id_guru: id_guru
+    monitoring_monitoringId_body:
+      type: object
+      properties:
+        guru:
+          minLength: 1
+          type: string
+        siswa:
+          minLength: 1
+          type: string
+    inline_response_200_2:
+      type: object
+      properties:
+        success:
+          type: boolean
+      example:
+        success: true
